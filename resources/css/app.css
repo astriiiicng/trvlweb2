@@ -4,37 +4,38 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
     
-    --color-neu-bg: #e0e5ec;
-    --color-neu-dark: #a3b1c6;
+    --color-neu-bg: #faf3f8;
+    --color-neu-dark: #e6d3e3;
     --color-neu-light: #ffffff;
+    --color-accent-pink: #ec4899;
+    --color-accent-purple: #a855f7;
     
-    /* Neumorphism shadows */
-    --shadow-neu: 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
-    --shadow-neu-sm: 5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.6);
-    --shadow-neu-inset: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
-    --shadow-neu-inset-sm: inset 3px 3px 6px 0 rgba(163, 177, 198, 0.7), inset -3px -3px 6px 0 rgba(255, 255, 255, 0.8);
+    /* Neumorphism shadows - Soft Feminine */
+    --shadow-neu: 9px 9px 18px #e6d3e3, -9px -9px 18px #ffffff;
+    --shadow-neu-sm: 5px 5px 12px #e6d3e3, -5px -5px 12px #ffffff;
+    --shadow-neu-inset: inset 6px 6px 12px #e6d3e3, inset -6px -6px 12px #ffffff;
+    --shadow-neu-inset-sm: inset 3px 3px 8px #e6d3e3, inset -3px -3px 8px #ffffff;
 }
 
 @utility glass {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(244, 114, 182, 0.3);
 }
 
 @utility glass-card {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(244, 114, 182, 0.35);
+    box-shadow: 0 12px 35px rgba(219, 39, 119, 0.08);
 }
 
 @layer base {
     body {
-        @apply bg-neu-bg text-gray-800 antialiased;
+        @apply bg-[#faf3f8] text-[#3b2338] antialiased;
     }
 }
