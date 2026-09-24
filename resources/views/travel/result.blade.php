@@ -12,653 +12,103 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-
-        * {
-            box-sizing: border-box;
+        .result-container { width: 100%; max-width: 1150px; margin: 0 auto; padding: 55px 25px 70px; }
+        
+        .result-header { margin-bottom: 35px; }
+        .result-badge { 
+            display: inline-block; 
+            background: var(--bg-color); 
+            box-shadow: var(--neu-shadow-sm);
+            border-radius: 30px; 
+            padding: 9px 17px; 
+            font-size: 14px; 
+            font-weight: 600;
+            margin-bottom: 18px; 
         }
-
-        body {
-            margin: 0;
-            background: #f5f7fb;
-            color: #172033;
-            font-family: Arial, Helvetica, sans-serif;
+        .result-header h1 { margin: 0 0 10px; font-size: 42px; line-height: 1.15; text-shadow: 2px 2px 4px rgba(0,0,0,0.05); }
+        .result-header p { margin: 0; color: var(--text-muted); font-size: 17px; }
+        
+        .destination-card, .day-card, .budget-card, .empty-result { 
+            background: var(--glass-bg); 
+            backdrop-filter: var(--glass-blur); 
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: 24px; 
+            padding: 32px; 
+            margin-bottom: 38px; 
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
-
-
-        /* =========================
-           NAVBAR
-        ========================= */
-
-        .navbar {
-            height: 72px;
-            background: #ffffff;
-            border-bottom: 1px solid #edf0f4;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 0 8%;
-        }
-
-        .logo {
-            font-size: 21px;
-            font-weight: 800;
-            color: #172033;
-        }
-
-        .navbar nav {
-            display: flex;
-            gap: 30px;
-        }
-
-        .navbar nav a {
-            color: #172033;
-            text-decoration: none;
-            font-size: 15px;
-        }
-
-
-        /* =========================
-           CONTAINER
-        ========================= */
-
-        .result-container {
-            width: 100%;
-            max-width: 1150px;
-            margin: 0 auto;
-            padding: 55px 25px 70px;
-        }
-
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        .result-header {
-            margin-bottom: 35px;
-        }
-
-        .result-badge {
-            display: inline-block;
-
-            background: #ffffff;
-            border: 1px solid #e5e9ef;
-
-            border-radius: 30px;
-
-            padding: 9px 17px;
-
-            font-size: 14px;
-
-            margin-bottom: 18px;
-        }
-
-        .result-header h1 {
-            margin: 0 0 10px;
-
-            font-size: 42px;
-            line-height: 1.15;
-
-            color: #172033;
-        }
-
-        .result-header p {
-            margin: 0;
-
-            color: #68758a;
-
-            font-size: 17px;
-        }
-
-
-        /* =========================
-           DESTINATION
-        ========================= */
-
-        .destination-card {
-            background: #ffffff;
-
-            border-radius: 24px;
-
-            padding: 32px;
-
-            margin-bottom: 38px;
-
-            box-shadow:
-                0 8px 30px rgba(20, 30, 50, 0.05);
-        }
-
-        .destination-title {
-            display: flex;
-
-            align-items: center;
-
-            gap: 15px;
-
-            margin-bottom: 25px;
-        }
-
-        .location-icon {
-            width: 52px;
-            height: 52px;
-
-            border-radius: 16px;
-
-            background: #f1f4f9;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            font-size: 24px;
-
-            flex-shrink: 0;
-        }
-
-        .destination-title h2 {
-            margin: 0;
-
-            font-size: 25px;
-
-            line-height: 1.3;
-        }
-
-        .destination-title p {
-            margin: 5px 0 0;
-
-            color: #7a8495;
-
-            font-size: 13px;
-        }
-
-
-        /* =========================
-           TRIP INFO
-        ========================= */
-
-        .trip-info {
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            gap: 12px;
-
-            margin-bottom: 22px;
-        }
-
-        .info-box {
-            background: #f7f9fc;
-
-            border-radius: 14px;
-
-            padding: 16px;
-        }
-
-        .info-label {
-            display: block;
-
-            color: #7a8495;
-
-            font-size: 12px;
-
-            margin-bottom: 7px;
-        }
-
-        .info-value {
-            display: block;
-
-            color: #172033;
-
-            font-size: 14px;
-
-            font-weight: 700;
-        }
-
-
-        /* =========================
-           CATEGORY
-        ========================= */
-
-        .category-title {
-            font-size: 13px;
-
-            font-weight: 800;
-
-            margin-bottom: 10px;
-        }
-
-        .category-list {
-            display: flex;
-
-            flex-wrap: wrap;
-
-            gap: 8px;
-        }
-
-        .category-badge {
-            background: #f5f7fb;
-
-            border: 1px solid #e5e9ef;
-
-            border-radius: 30px;
-
-            padding: 8px 13px;
-
-            font-size: 12px;
-
-            font-weight: 700;
-        }
-
-
-        /* =========================
-           AI SECTION
-        ========================= */
-
-        .ai-section {
-            margin-top: 10px;
-        }
-
-        .ai-section-header {
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            margin-bottom: 18px;
-        }
-
-        .ai-section-header h2 {
-            margin: 0;
-
-            font-size: 25px;
-        }
-
-        .duration-badge {
-            background: #ffffff;
-
-            border: 1px solid #e5e9ef;
-
-            border-radius: 30px;
-
-            padding: 9px 15px;
-
-            font-size: 13px;
-
-            font-weight: 700;
-        }
-
-
-        /* =========================
-           DAY CARD
-        ========================= */
-
-        .day-card {
-            background: #ffffff;
-
-            border-radius: 22px;
-
-            padding: 25px;
-
-            margin-bottom: 17px;
-
-            box-shadow:
-                0 7px 25px
-                rgba(20, 30, 50, 0.045);
-        }
-
-        .day-header {
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            margin-bottom: 18px;
-        }
-
-        .day-number {
-            background: #172033;
-
-            color: #ffffff;
-
-            border-radius: 10px;
-
-            padding: 8px 11px;
-
-            font-size: 12px;
-
-            font-weight: 800;
-        }
-
-        .day-header h3 {
-            margin: 0;
-
-            font-size: 17px;
-        }
-
-        .day-date {
-            color: #6b7280;
-
-            font-size: 14px;
-
-            margin-top: 4px;
-        }
-
-
-        /* =========================
-           ACTIVITY
-        ========================= */
-
-        .activity-list {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 12px;
-        }
-
-        .activity-card {
-            border: 1px solid #e8ebef;
-
-            border-radius: 14px;
-
-            padding: 17px;
-
-            background: #ffffff;
-
-            transition: 0.2s ease;
-        }
-
-        .activity-card:hover {
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 8px 20px
-                rgba(20, 30, 50, 0.06);
-        }
-
-        .activity-category {
-            font-size: 13px;
-
-            font-weight: 700;
-
-            margin-bottom: 8px;
-        }
-
-        .activity-name {
-            display: block;
-
-            color: #172033;
-
-            font-size: 17px;
-
-            font-weight: 800;
-
-            line-height: 1.4;
-
-            margin-bottom: 7px;
-        }
-
-        .activity-description {
-            color: #68758a;
-
-            font-size: 14px;
-
-            line-height: 1.6;
-        }
-
-
-        /* =========================
-           EMPTY
-        ========================= */
-
-        .empty-result {
-            background: #ffffff;
-
-            padding: 30px;
-
-            border-radius: 18px;
-
-            text-align: center;
-
-            color: #68758a;
-        }
-
-
-        /* =========================
-           BUDGET
-        ========================= */
-
-        .budget-section {
-            margin-top: 32px;
-        }
-
-        .budget-card {
-            background: #ffffff;
-
-            border-radius: 20px;
-
-            padding: 23px;
-
-            box-shadow:
-                0 7px 25px
-                rgba(20, 30, 50, 0.045);
-        }
-
-        .budget-header {
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 18px;
-        }
-
-        .budget-title-wrapper h2 {
-            margin: 0;
-
-            font-size: 19px;
-        }
-
-        .budget-title-wrapper p {
-            margin: 5px 0 0;
-
-            color: #7a8495;
-
-            font-size: 12px;
-        }
-
-        .budget-grid {
-            display: grid;
-
-            grid-template-columns:
-                1fr repeat(5, 1fr);
-
-            gap: 10px;
-        }
-
-        .budget-item {
-            min-height: 90px;
-
-            background: #f7f9fc;
-
-            border-radius: 14px;
-
-            padding: 13px;
-
-            display: flex;
-
-            flex-direction: column;
-
-            justify-content: space-between;
-        }
-
-        .budget-item.total {
-            background: #172033;
-
-            color: #ffffff;
-        }
-
-        .budget-icon {
-            font-size: 17px;
-
-            margin-bottom: 5px;
-        }
-
-        .budget-item-name {
-            font-size: 11px;
-
-            font-weight: 700;
-
-            margin-bottom: 4px;
-        }
-
-        .budget-amount {
-            font-size: 13px;
-
-            font-weight: 800;
-        }
-
-        .budget-total-label {
-            font-size: 11px;
-
-            color: #c8ced9;
-
-            margin-bottom: 4px;
-        }
-
-        .budget-total-value {
-            font-size: 19px;
-
-            font-weight: 800;
-        }
-
-        .budget-status {
-            margin-top: 15px;
-
-            padding: 13px 15px;
-
-            border-radius: 12px;
-
-            background: #f7f9fc;
-
-            font-size: 13px;
-
-            font-weight: 700;
-
-            line-height: 1.8;
-        }
-
-        .budget-note {
-            margin-top: 12px;
-
-            color: #7a8495;
-
-            font-size: 11px;
-
-            line-height: 1.5;
-        }
-
-
-        /* =========================
-           BUTTON
-        ========================= */
-
-        .bottom-action {
-            text-align: center;
-
-            margin-top: 28px;
-        }
-
-        .back-button {
-            display: inline-block;
-
-            background: #172033;
-
-            color: #ffffff;
-
-            text-decoration: none;
-
-            border-radius: 30px;
-
-            padding: 11px 20px;
-
-            font-size: 13px;
-
-            font-weight: 700;
-        }
-
-        .back-button:hover {
-            opacity: 0.9;
-        }
-
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
+        
+        .destination-title { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .location-icon { width: 52px; height: 52px; border-radius: 16px; background: var(--bg-color); box-shadow: var(--neu-shadow-sm); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+        .destination-title h2 { margin: 0; font-size: 25px; line-height: 1.3; }
+        .destination-title p { margin: 5px 0 0; color: var(--text-muted); font-size: 13px; }
+        
+        .trip-info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 22px; }
+        .info-box { background: var(--bg-color); box-shadow: var(--neu-inset-sm); border-radius: 14px; padding: 16px; }
+        .info-label { display: block; color: var(--text-muted); font-size: 12px; margin-bottom: 7px; font-weight: 600; }
+        .info-value { display: block; font-size: 14px; font-weight: 700; }
+        
+        .category-title { font-size: 13px; font-weight: 800; margin-bottom: 10px; }
+        .category-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .category-badge { background: var(--bg-color); box-shadow: var(--neu-shadow-sm); border-radius: 30px; padding: 8px 15px; font-size: 12px; font-weight: 700; transition: all 0.3s ease; }
+        .category-badge:hover { box-shadow: var(--neu-inset-sm); }
+        
+        .ai-section { margin-top: 10px; }
+        .ai-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+        .ai-section-header h2 { margin: 0; font-size: 25px; }
+        .duration-badge { background: var(--bg-color); box-shadow: var(--neu-shadow-sm); border-radius: 30px; padding: 9px 15px; font-size: 13px; font-weight: 700; }
+        
+        .day-card { margin-bottom: 25px; padding: 28px; }
+        .day-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .day-number { background: var(--bg-color); box-shadow: var(--neu-shadow-sm); border-radius: 12px; padding: 10px 14px; font-size: 13px; font-weight: 800; }
+        .day-header h3 { margin: 0; font-size: 18px; }
+        .day-date { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+        
+        .activity-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .activity-card { background: var(--bg-color); box-shadow: var(--neu-shadow-sm); border-radius: 16px; padding: 20px; transition: all 0.3s ease; border: none; }
+        .activity-card:hover { box-shadow: var(--neu-shadow); transform: translateY(-3px); }
+        .activity-category { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #4a5568; }
+        .activity-name { display: block; font-size: 17px; font-weight: 800; line-height: 1.4; margin-bottom: 8px; }
+        .activity-description { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+        
+        .budget-section { margin-top: 32px; }
+        .budget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .budget-title-wrapper h2 { margin: 0; font-size: 19px; }
+        .budget-title-wrapper p { margin: 5px 0 0; color: var(--text-muted); font-size: 12px; }
+        
+        .budget-grid { display: grid; grid-template-columns: 1fr repeat(5, 1fr); gap: 15px; }
+        .budget-item { min-height: 90px; background: var(--bg-color); box-shadow: var(--neu-inset-sm); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+        .budget-item.total { box-shadow: var(--neu-shadow); background: #2d3748; color: #fff; }
+        .budget-item.total .budget-total-label { color: #a0aec0; }
+        
+        .budget-icon { font-size: 18px; margin-bottom: 8px; }
+        .budget-item-name { font-size: 12px; font-weight: 700; margin-bottom: 5px; }
+        .budget-amount { font-size: 14px; font-weight: 800; }
+        .budget-total-label { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+        .budget-total-value { font-size: 20px; font-weight: 800; }
+        
+        .budget-status { margin-top: 20px; padding: 15px; border-radius: 14px; background: var(--bg-color); box-shadow: var(--neu-inset-sm); font-size: 14px; font-weight: 700; line-height: 1.8; }
+        .budget-note { margin-top: 15px; color: var(--text-muted); font-size: 12px; line-height: 1.6; }
+        
+        .bottom-action { text-align: center; margin-top: 35px; }
+        .back-button { display: inline-block; background: var(--bg-color); box-shadow: var(--neu-shadow); color: var(--text-main); text-decoration: none; border-radius: 30px; padding: 12px 24px; font-size: 14px; font-weight: 700; transition: all 0.3s ease; }
+        .back-button:hover { box-shadow: var(--neu-shadow-sm); transform: translateY(2px); }
+        .back-button:active { box-shadow: var(--neu-inset); }
+        
         @media (max-width: 900px) {
-
-            .activity-list {
-                grid-template-columns: 1fr;
-            }
-
-            .budget-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-            .trip-info {
-                grid-template-columns: 1fr;
-            }
-
+            .activity-list { grid-template-columns: 1fr; }
+            .budget-grid { grid-template-columns: repeat(2, 1fr); }
+            .trip-info { grid-template-columns: 1fr 1fr; }
         }
-
-
         @media (max-width: 600px) {
-
-            .navbar {
-                padding: 0 20px;
-            }
-
-            .navbar nav {
-                display: none;
-            }
-
-            .result-container {
-                padding: 35px 16px 50px;
-            }
-
-            .result-header h1 {
-                font-size: 31px;
-            }
-
-            .destination-card,
-            .day-card,
-            .budget-card {
-                padding: 19px;
-            }
-
-            .budget-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .ai-section-header {
-                align-items: flex-start;
-
-                gap: 10px;
-
-                flex-direction: column;
-            }
-
+            .result-container { padding: 35px 16px 50px; }
+            .result-header h1 { font-size: 31px; }
+            .destination-card, .day-card, .budget-card { padding: 20px; }
+            .budget-grid { grid-template-columns: 1fr; }
+            .ai-section-header { align-items: flex-start; gap: 10px; flex-direction: column; }
+            .trip-info { grid-template-columns: 1fr; }
         }
-
     </style>
 
 </head>
