@@ -347,10 +347,15 @@ class TravelPlannerController extends Controller
             'context' => 'nullable|string',
             'summary' => 'nullable|string',
             'budget_breakdown' => 'nullable|array',
+            'estimasi_budget' => 'nullable|array',
             'itinerary' => 'required|array',
         ]);
 
         try {
+            $budgetBreakdown = !empty($validated['budget_breakdown']) 
+                ? $validated['budget_breakdown'] 
+                : (!empty($validated['estimasi_budget']) ? $validated['estimasi_budget'] : []);
+
             $trip = Trip::create([
                 'destination' => $validated['destination'],
                 'start_date' => $validated['start_date'],
@@ -360,7 +365,7 @@ class TravelPlannerController extends Controller
                 'preferences' => $validated['preferences'] ?? [],
                 'context' => $validated['context'] ?? '',
                 'summary' => $validated['summary'] ?? '',
-                'budget_breakdown' => $validated['budget_breakdown'] ?? [],
+                'budget_breakdown' => $budgetBreakdown,
                 'itinerary' => $validated['itinerary'],
             ]);
 
@@ -395,7 +400,8 @@ class TravelPlannerController extends Controller
 
         if (!empty($trip->itinerary)) {
             foreach ($trip->itinerary as $day) {
-                foreach ($day['activities'] ?? [] as $act) {
+                $activities = $day['rekomendasi'] ?? $day['activities'] ?? [];
+                foreach ($activities as $act) {
                     if (!empty($act['lat']) && !empty($act['lon'])) {
                         $destination['lat'] = $act['lat'];
                         $destination['lon'] = $act['lon'];
@@ -408,6 +414,7 @@ class TravelPlannerController extends Controller
         $aiResult = [
             'summary' => $trip->summary,
             'budget_breakdown' => $trip->budget_breakdown,
+            'estimasi_budget' => $trip->budget_breakdown,
             'itinerary' => $trip->itinerary,
         ];
 
