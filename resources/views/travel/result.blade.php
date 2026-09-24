@@ -557,25 +557,54 @@
 ========================= -->
 
 @php
+    $budget = $aiResult['estimasi_budget'] ?? $aiResult['budget_breakdown'] ?? [];
 
-    $budget = $aiResult['estimasi_budget'] ?? [];
-
-    $transportasi = $budget['transportasi'] ?? 0;
-
-    $penginapan = $budget['penginapan'] ?? 0;
-
-    $makan = $budget['makan'] ?? 0;
-
-    $tiket = $budget['tiket_wisata'] ?? 0;
-
-    $lainnya = $budget['lainnya'] ?? 0;
-
-    $total = $budget['total'] ?? 0;
-
-    $sisa = $budget['sisa_budget'] ?? 0;
-
+    $transportasi = (float)($budget['transportasi'] ?? 0);
+    $penginapan = (float)($budget['penginapan'] ?? 0);
+    $makan = (float)($budget['makan'] ?? 0);
+    $tiket = (float)($budget['tiket_wisata'] ?? $budget['tiket'] ?? 0);
+    $lainnya = (float)($budget['lainnya'] ?? 0);
+    $total = (float)($budget['total'] ?? 0);
+    $sisa = isset($budget['sisa_budget']) ? (float)$budget['sisa_budget'] : 0;
     $status = $budget['status'] ?? '';
 
+    // Perhitungan otomatis jika total estimasi bernilai 0 atau breakdown kosong
+    if ($total == 0 && !empty($aiResult['itinerary']) && is_array($aiResult['itinerary'])) {
+        $calcTotal = 0;
+        $calcMakan = 0;
+        $calcTiket = 0;
+
+        foreach ($aiResult['itinerary'] as $day) {
+            $activities = $day['rekomendasi'] ?? $day['activities'] ?? [];
+            if (is_array($activities)) {
+                foreach ($activities as $act) {
+                    $isAvailable = isset($act['is_available']) ? (bool)$act['is_available'] : (!str_contains(strtolower($act['nama_tempat'] ?? ''), 'tidak tersedia'));
+                    if ($isAvailable) {
+                        $cost = (float)($act['estimasi_biaya'] ?? 0);
+                        $calcTotal += $cost;
+                        $cat = strtolower($act['kategori'] ?? '');
+                        if ($cat === 'kuliner') {
+                            $calcMakan += $cost;
+                        } else {
+                            $calcTiket += $cost;
+                        }
+                    }
+                }
+            }
+        }
+
+        $makan = $makan > 0 ? $makan : $calcMakan;
+        $tiket = $tiket > 0 ? $tiket : $calcTiket;
+        $totalSum = $transportasi + $penginapan + $makan + $tiket + $lainnya;
+        $total = $totalSum > 0 ? $totalSum : $calcTotal;
+        $userBudget = (float)($trip['budget'] ?? 0);
+        $sisa = $userBudget - $total;
+        $status = $sisa >= 0 ? 'cukup' : 'melebihi_budget';
+    } elseif ($total > 0 && !isset($budget['sisa_budget'])) {
+        $userBudget = (float)($trip['budget'] ?? 0);
+        $sisa = $userBudget - $total;
+        $status = $sisa >= 0 ? 'cukup' : 'melebihi_budget';
+    }
 @endphp
 
 
@@ -960,7 +989,8 @@
                 preferences: @json($trip['preferences'] ?? []),
                 context: @json($trip['context'] ?? ''),
                 summary: @json($aiResult['summary'] ?? ''),
-                budget_breakdown: @json($aiResult['budget_breakdown'] ?? []),
+                budget_breakdown: @json($aiResult['budget_breakdown'] ?? $aiResult['estimasi_budget'] ?? []),
+                estimasi_budget: @json($aiResult['estimasi_budget'] ?? $aiResult['budget_breakdown'] ?? []),
                 itinerary: itineraryData
             })
         })

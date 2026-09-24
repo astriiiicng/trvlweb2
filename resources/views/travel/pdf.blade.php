@@ -360,41 +360,78 @@
         </div>
 
         <!-- RINCIAN BUDGET -->
-        @if(!empty($breakdown))
-            <div class="section-header">
-                <i class="fa-solid fa-wallet" style="color: #6366f1;"></i> Rincian Estimasi Biaya
-            </div>
-            <table class="budget-table">
-                <thead>
-                    <tr>
-                        <th>Kategori Pengeluaran</th>
-                        <th>Estimasi Alokasi (Rp)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Transportasi Lokal</td>
-                        <td>Rp {{ number_format($breakdown['transportasi'] ?? 0, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td>Penginapan / Akomodasi</td>
-                        <td>Rp {{ number_format($breakdown['penginapan'] ?? 0, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td>Konsumsi & Kuliner</td>
-                        <td>Rp {{ number_format($breakdown['makan'] ?? 0, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td>Tiket Wisata & Rekreasi</td>
-                        <td>Rp {{ number_format($breakdown['tiket_wisata'] ?? 0, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Estimasi Terpakai</td>
-                        <td>Rp {{ number_format($breakdown['total'] ?? 0, 0, ',', '.') }} (Sisa: Rp {{ number_format($breakdown['sisa_budget'] ?? 0, 0, ',', '.') }})</td>
-                    </tr>
-                </tbody>
-            </table>
-        @endif
+        @php
+            $breakdown = $trip->budget_breakdown ?? [];
+            $transportasi = (float)($breakdown['transportasi'] ?? 0);
+            $penginapan = (float)($breakdown['penginapan'] ?? 0);
+            $makan = (float)($breakdown['makan'] ?? 0);
+            $tiket = (float)($breakdown['tiket_wisata'] ?? $breakdown['tiket'] ?? 0);
+            $totalEst = (float)($breakdown['total'] ?? 0);
+            $sisaBudget = isset($breakdown['sisa_budget']) ? (float)$breakdown['sisa_budget'] : ((float)$trip->budget - $totalEst);
+
+            if ($totalEst == 0 && !empty($trip->itinerary) && is_array($trip->itinerary)) {
+                $calcTotal = 0;
+                $calcMakan = 0;
+                $calcTiket = 0;
+                foreach ($trip->itinerary as $day) {
+                    $activities = $day['rekomendasi'] ?? $day['activities'] ?? [];
+                    if (is_array($activities)) {
+                        foreach ($activities as $act) {
+                            $isAvailable = isset($act['is_available']) ? (bool)$act['is_available'] : (!str_contains(strtolower($act['nama_tempat'] ?? ''), 'tidak tersedia'));
+                            if ($isAvailable) {
+                                $cost = (float)($act['estimasi_biaya'] ?? 0);
+                                $calcTotal += $cost;
+                                $cat = strtolower($act['kategori'] ?? '');
+                                if ($cat === 'kuliner') {
+                                    $calcMakan += $cost;
+                                } else {
+                                    $calcTiket += $cost;
+                                }
+                            }
+                        }
+                    }
+                }
+                $makan = $makan > 0 ? $makan : $calcMakan;
+                $tiket = $tiket > 0 ? $tiket : $calcTiket;
+                $totalSum = $transportasi + $penginapan + $makan + $tiket;
+                $totalEst = $totalSum > 0 ? $totalSum : $calcTotal;
+                $sisaBudget = (float)$trip->budget - $totalEst;
+            }
+        @endphp
+
+        <div class="section-header">
+            <i class="fa-solid fa-wallet" style="color: #6366f1;"></i> Rincian Estimasi Biaya
+        </div>
+        <table class="budget-table">
+            <thead>
+                <tr>
+                    <th>Kategori Pengeluaran</th>
+                    <th>Estimasi Alokasi (Rp)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Transportasi Lokal</td>
+                    <td>Rp {{ number_format($transportasi, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Penginapan / Akomodasi</td>
+                    <td>Rp {{ number_format($penginapan, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Konsumsi & Kuliner</td>
+                    <td>Rp {{ number_format($makan, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Tiket Wisata & Rekreasi</td>
+                    <td>Rp {{ number_format($tiket, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Total Estimasi Terpakai</td>
+                    <td>Rp {{ number_format($totalEst, 0, ',', '.') }} (Sisa: Rp {{ number_format($sisaBudget, 0, ',', '.') }})</td>
+                </tr>
+            </tbody>
+        </table>
 
         <!-- ITINERARY HARIAN -->
         <div class="section-header">
