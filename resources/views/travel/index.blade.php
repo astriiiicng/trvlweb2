@@ -8,95 +8,6 @@
     <title>TripMate - AI Travel Planner</title>
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-    <style>
-        .planner-card {
-            width: 450px;
-        }
-
-        .preference-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .preference-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 13px;
-            border: 1px solid #e1e5eb;
-            border-radius: 12px;
-            cursor: pointer;
-            background: #fff;
-            transition: .2s;
-        }
-
-        .preference-item:hover {
-            border-color: #172033;
-            background: #f8fafc;
-        }
-
-        .preference-item input {
-            width: 17px;
-            height: 17px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .preference-item span {
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .plan-button {
-            width: 100%;
-            margin-top: 20px;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            background: #172033;
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .plan-button:hover {
-            background: #27344d;
-        }
-
-        .error-message {
-            margin-bottom: 15px;
-            padding: 12px 14px;
-            background: #fff1f2;
-            border: 1px solid #fecdd3;
-            color: #be123c;
-            border-radius: 10px;
-            font-size: 13px;
-        }
-
-        .success-message {
-            margin-bottom: 15px;
-            padding: 12px 14px;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            border-radius: 10px;
-            font-size: 13px;
-        }
-
-        @media (max-width: 600px) {
-            .preference-options {
-                grid-template-columns: 1fr;
-            }
-
-            .planner-card {
-                width: 100%;
-            }
-        }
-    </style>
 </head>
 
 
@@ -197,7 +108,6 @@
                 <select
                     id="province"
                     class="form-control"
-                    style="width: 100%; padding: 14px; border: 1px solid #e1e5eb; border-radius: 12px; font-size: 14px; margin-bottom: 15px;"
                     required
                 >
                     <option value="">-- Pilih Provinsi --</option>
@@ -211,7 +121,6 @@
                     id="destination"
                     name="destination"
                     class="form-control"
-                    style="width: 100%; padding: 14px; border: 1px solid #e1e5eb; border-radius: 12px; font-size: 14px;"
                     required
                     disabled
                 >
@@ -412,7 +321,6 @@
                     id="context"
                     name="context"
                     placeholder="Contoh: Perjalanan santai, bawa lansia, hindari aktivitas fisik berat."
-                    style="width: 100%; padding: 14px; border: 1px solid #e1e5eb; border-radius: 12px; min-height: 90px; font-family: inherit; font-size: 14px; resize: vertical;"
                 >{{ old('context') }}</textarea>
 
             </div>
