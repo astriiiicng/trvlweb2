@@ -10,10 +10,12 @@ Menggabungkan dua tren desain modern yang saling melengkapi:
 
 ## 🎨 Design System & Guidelines
 
-### 1. Palet Warna (Color Palette)
-- **Background Utama (Neumorphism):** Warna solid yang lembut (off-white, light gray `#e0e5ec`, atau pastel) agar bayangan (shadow) terlihat natural.
-- **Aksen (Glassmorphism):** Warna gradasi cerah atau bentuk geometris berwarna yang diletakkan di bawah elemen *glass* untuk mempertegas efek transparan.
-- **Teks:** Abu-abu gelap (Dark slate) untuk kontras yang baik, bukan hitam pekat.
+### 1. Palet Warna (Color Palette - Soft Feminine & Colorful Theme)
+- **Background Utama (Neumorphism):** Pastel Warm Blush (`#faf3f8`) yang lembut dan hangat agar bayangan Neumorphism terasa natural dan menyenangkan.
+- **Warna Teks Utama:** Deep Plum/Berry (`#3b2338`) untuk keterbacaan tinggi dan nuansa lembut (bukan hitam kaku).
+- **Aksen Gradasi (Vibrant Feminine):** Rose-Pink ke Lavender-Purple (`linear-gradient(135deg, #ec4899 0%, #a855f7 100%)`) untuk tombol, header, dan highlight brand.
+- **Glassmorphism Overlay:** Panel kaca transparan (`rgba(255, 255, 255, 0.55)`) dengan border tipis merah muda (`rgba(244, 114, 182, 0.35)`) dan ambient glowing blobs di latar belakang.
+- **Badges & Chips:** Kombinasi warna pastel bergradasi (Rose `#fce7f3`, Lavender `#f3e8ff`, Mint `#ccfbf1`, Peach `#ffedd5`).
 
 ### 2. Aturan Bayangan (Shadows) & Efek (Blur)
 - **Neumorphism (Timbul):** 
